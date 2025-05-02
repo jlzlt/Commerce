@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Create a New Listing</h2>
+    <form action="{% url 'create' %}", method="post">
+        {% csrf_token %}
+        <label for="title">Listing title:</label><br>
+        <input type="text" name="title" autocomplete="off" value="{{ title }}" required minlength="1">
+        {% if empty_title %}
+            <span>{{ empty_title }}</span>
+        {% endif %}
+        <br>
+        <label for="pic_url">URL for picture (optional):</label><br>
+        <input type="text" name="pic_url" autocomplete="off" value="{{ pic_url }}">
+        {% if url_error %}
+            <span>{{ url_error }}</span>
+        {% endif %}
+        <br>
+        <label for="category">Category (optional):</label><br>
+        <input type="text" name="category" autocomplete="off" value="{{ category }}">
+        {% if category_error %}
+            <span>{{ category_error }}</span>
+        {% endif %}
+        <br>
+        
+    </form>
+{% endblock %}
