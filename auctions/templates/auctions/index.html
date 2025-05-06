@@ -7,21 +7,23 @@
         <h2 id="index_heading">Active Listings</h2>
         <div id="list_container">       
             {% for listing in listings %}
-                <div class="list_item">
-                        {% if listing.image %}
-                            <img src="{{ listing.image }}" alt="{{ listing.title }}" width="300" height="300">
-                        {% else %}
-                            <img src="{% static 'auctions/no_image.jpg' %}" alt="No image" width="300" height="300">
-                        {% endif %}
-                        <div class="item_info">
-                            <h5>{{ listing.title }}</h5>
-                            <div class="item_price">
-                                <span class="price_label">Current Bid:</span>
-                                <span class="price_num">${{ listing.latest_price|floatformat:"-2" }}</span>
+                <a href="{% url 'get_listing' listing.id %}" class="listing_link">
+                    <div class="list_item">
+                            {% if listing.image %}
+                                <img src="{{ listing.image }}" alt="{{ listing.title }}" class="item_img">
+                            {% else %}
+                                <img src="{% static 'auctions/no_image.jpg' %}" alt="No image" class="item_img">
+                            {% endif %}
+                            <div class="item_info">
+                                <h5>{{ listing.title }}</h5>
+                                <div class="item_price">
+                                    <span class="price_label">Current Bid:</span>
+                                    <span class="price_num">${{ listing.latest_price|floatformat:"-2" }}</span>
+                                </div>
+                                <div class="item_desc">{{ listing.description }}</div>
                             </div>
-                            <div class="item_desc">{{ listing.description }}</div>
-                        </div>
-                </div>
+                    </div>
+                </a>
             {% endfor %}            
         </div> 
     </div>  

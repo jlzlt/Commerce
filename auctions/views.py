@@ -97,5 +97,8 @@ def create(request):
         'form': form
     })
 
-def get_listing(request):
-    pass
+def get_listing(request, id):
+    listing = Listing.objects.get(id=id)
+    return render(request, "auctions/listing.html", {
+        "listing": listing
+    })

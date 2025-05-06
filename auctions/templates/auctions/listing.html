@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<div id="listing_div">
+    <h2 id="listing_heading">{{ listing.title }}</h2>
+    <hr></hr>
+    {% if listing.image %}
+    <img src="{{ listing.image }}" alt="{{ listing.title }}" class="listing_img">
+    {% endif %}
+    <div id="listing_desc">{{ listing.description }}</div>
+    <div id="listing_price">${{ listing.latest_price|floatformat:"-2" }}</div>
+</div>
+
+{% endblock %}
