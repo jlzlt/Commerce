@@ -1,27 +1,47 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Create a New Listing</h2>
-    <form action="{% url 'create' %}", method="post">
-        {% csrf_token %}
-        <label for="title">Listing title:</label><br>
-        <input type="text" name="title" autocomplete="off" value="{{ title }}" required minlength="1">
-        {% if empty_title %}
-            <span>{{ empty_title }}</span>
-        {% endif %}
-        <br>
-        <label for="pic_url">URL for picture (optional):</label><br>
-        <input type="text" name="pic_url" autocomplete="off" value="{{ pic_url }}">
-        {% if url_error %}
-            <span>{{ url_error }}</span>
-        {% endif %}
-        <br>
-        <label for="category">Category (optional):</label><br>
-        <input type="text" name="category" autocomplete="off" value="{{ category }}">
-        {% if category_error %}
-            <span>{{ category_error }}</span>
-        {% endif %}
-        <br>
-        
-    </form>
+    <div id="create_div">
+        <h2>Create a New Listing</h2>
+        <form action="{% url 'create' %}" method="post">
+            {% csrf_token %}
+
+            <label class="create_labels" for="{{ form.title.id_for_label }}" style="margin-top: 20px;">Listing title:</label><br>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <span class="create_errors">{{ form.title.errors.0 }}</span>
+            {% endif %}
+            <br>
+
+            <label class="create_labels" for="{{ form.start_bid.id_for_label }}">Starting bid ($):</label><br>
+            {{ form.start_bid }}
+            {% if form.start_bid.errors %}
+                <span class="create_errors">{{ form.start_bid.errors.0 }}</span>
+            {% endif %}
+            <br>
+
+            <label class="create_labels" for="{{ form.pic_url.id_for_label }}">URL for picture (optional):</label><br>
+            {{ form.pic_url }}
+            {% if form.pic_url.errors %}
+                <span class="create_errors">{{ form.pic_url.errors.0 }}</span>
+            {% endif %}
+            <br>
+
+            <label class="create_labels" for="{{ form.category.id_for_label }}">Category (optional):</label><br>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <span class="create_errors">{{ form.category.errors.0 }}</span>
+            {% endif %}
+            <br>
+
+            <label class="create_labels" for="{{ form.description.id_for_label }}">Description:</label><br>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <span class="create_errors">{{ form.description.errors.0 }}</span>
+            {% endif %}
+            <br>
+
+            <button type="submit">Submit</button><br>
+        </form>
+    </div>
 {% endblock %}

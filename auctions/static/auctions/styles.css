@@ -1,3 +1,25 @@
 body {
     padding: 10px;
 }
+
+#title, #signed, #create_div {
+    padding-left: 1rem;
+}
+
+.create_fields {
+    width: 350px;
+}
+
+#create_desc {
+    width: 350px;
+    height: 250px;
+}
+
+.create_errors {
+    color: #FF3333;
+    margin-left: 5px;
+}
+
+.create_labels {
+    margin-top: 5px;
+}
