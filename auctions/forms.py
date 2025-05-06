@@ -1,4 +1,16 @@
+import requests
 from django import forms
+from django.core.exceptions import ValidationError
+
+
+def validate_image_url(url):
+    try:
+        response = requests.head(url, timeout=5)
+        content_type = response.headers.get("Content-Type", "")
+        if not content_type.startswith("image/"):
+            raise ValidationError("URL does not point to a valid image.")
+    except requests.RequestException:
+        raise ValidationError("Could not reach the image URL.")
 
 
 class CreateListingForm(forms.Form):
@@ -19,6 +31,7 @@ class CreateListingForm(forms.Form):
         label="Picture URL", 
         required=False, 
         max_length=255,
+        validators=[validate_image_url],
         widget=forms.TextInput(attrs={'class': 'create_fields'})
     )
     category = forms.CharField(

@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import MaxLengthValidator
 
 
+
 class User(AbstractUser):
     pass
 
@@ -15,6 +16,10 @@ class Listing(models.Model):
     start_bid = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
     image = models.URLField(max_length=255, blank=True)
     category = models.CharField(max_length=64, blank=True)
+
+    def latest_price(self):
+        highest_bid = self.bids.aggregate(max_bid=models.Max('bid'))['max_bid']
+        return highest_bid if highest_bid is not None else self.start_bid
 
 
 class Bids(models.Model):

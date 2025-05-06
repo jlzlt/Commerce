@@ -10,7 +10,10 @@ from .forms import CreateListingForm
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = Listing.objects.all()
+    return render(request, "auctions/index.html", {
+        "listings": listings
+    })
 
 
 def login_view(request):
@@ -93,3 +96,6 @@ def create(request):
     return render(request, "auctions/create.html", {
         'form': form
     })
+
+def get_listing(request):
+    pass
