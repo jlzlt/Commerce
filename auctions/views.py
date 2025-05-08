@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.utils import timezone
 
-from .models import User, Listing, Bids
+from .models import User, Listing, Bids, Categories
 from .forms import CreateListingForm, PlaceBidForm, CommentForm
 
 
@@ -81,11 +81,14 @@ def create(request):
             category = form.cleaned_data['category']
             description = form.cleaned_data['description']
 
+            # Check if the category exists, if not create it
+            category_obj, created = Categories.objects.get_or_create(name=category)
+
             Listing.objects.create(
                 title=title,
                 start_bid=start_bid,
                 image=pic_url,
-                category=category,
+                category=category_obj,
                 description=description,
                 user=request.user
             )
@@ -196,4 +199,10 @@ def watchlist(request):
 
     return render(request, 'auctions/watchlist.html', {
         'user_watchlist': user_watchlist,
+    })
+
+def categories(request):
+    categories = Categories.objects.all().order_by("name")
+    return render(request, 'auctions/categories.html', {
+        "categories": categories
     })

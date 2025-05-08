@@ -17,7 +17,7 @@ class Listing(models.Model):
     start_bid = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
     final_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     image = models.URLField(max_length=255, blank=True)
-    category = models.CharField(max_length=64, blank=True)
+    category = models.ForeignKey("Categories", on_delete=models.SET_NULL, null=True, blank=True, related_name="listings")
     closed = models.BooleanField(default=False)
     winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="won_auctions")
 
@@ -51,3 +51,10 @@ class Comments(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments", blank=False)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments", blank=False)
     comment = models.TextField(validators=[MaxLengthValidator(1000)], blank=False)
+
+
+class Categories(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return self.name

@@ -2,7 +2,7 @@ body {
     padding: 10px;
 }
 
-#title, #signed, #create_div, #index_div {
+#title, #signed, #create_div, #index_div, #cat-container {
     padding-left: 1rem;
 }
 
