@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+
+{% load static %}
+
+{% block title %} Watchlist {% endblock %}
+
+{% block body %}
+    <div id="index_div">
+        <h2 id="index_heading">Watchlist</h2>
+        <div id="list_container">       
+            {% for listing in user_watchlist %}
+                <a href="{% url 'listing' listing.id %}" class="listing_link">
+                    <div class="list_item">
+                            {% if listing.image %}
+                                <img src="{{ listing.image }}" alt="{{ listing.title }}" class="item_img">
+                            {% else %}
+                                <img src="{% static 'auctions/no_image.jpg' %}" alt="No image" class="item_img">
+                            {% endif %}
+                            <div class="item_info">
+                                <h5>{{ listing.title }}</h5>
+                                <div class="item_price">
+                                    <span class="price_label">Current Bid:</span>
+                                    <span class="price_num">${{ listing.latest_price|floatformat:"-2" }}</span>
+                                </div>
+                                <div class="item_desc">{{ listing.description }}</div>                                
+                            </div>
+                    </div>
+                </a>
+            {% endfor %}            
+        </div> 
+    </div>  
+{% endblock %}

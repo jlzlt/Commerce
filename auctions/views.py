@@ -189,3 +189,11 @@ def close_auction(request, id):
             messages.success(request, "Auction closed successfully. This listing has ended with no bids. The item was not sold.")
     
     return redirect('listing', id=id)
+
+@login_required
+def watchlist(request):
+    user_watchlist = request.user.watchlist.all()
+
+    return render(request, 'auctions/watchlist.html', {
+        'user_watchlist': user_watchlist,
+    })
