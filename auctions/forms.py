@@ -2,6 +2,8 @@ import requests
 from django import forms
 from django.core.exceptions import ValidationError
 
+from .models import Comments
+
 
 def validate_image_url(url):
     try:
@@ -71,3 +73,19 @@ class PlaceBidForm(forms.Form):
         if self.current_bid is not None and bid <= self.current_bid:
             raise ValidationError(f'Your bid must be higher than the current price (${self.current_bid:.2f}).')
         return bid
+    
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ['comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Write your comment here...'
+            })
+        }
+        labels = {
+            'comment': ''
+        }

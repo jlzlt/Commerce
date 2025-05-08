@@ -5,17 +5,24 @@ from django.core.validators import MaxLengthValidator
 
 
 class User(AbstractUser):
-    pass
+    watchlist = models.ManyToManyField("Listing", blank=True, related_name="watched_by")
 
 
 class Listing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    closed_at = models.DateTimeField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings", blank=False)
     title = models.CharField(max_length=64, blank=False)
     description = models.TextField(validators=[MaxLengthValidator(1000)], blank=False)
     start_bid = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+    final_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     image = models.URLField(max_length=255, blank=True)
     category = models.CharField(max_length=64, blank=True)
+    closed = models.BooleanField(default=False)
+    winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="won_auctions")
+
+    def __str__(self):
+        return f"{self.id}. {self.title}"
 
     def latest_price(self):
         highest_bid = self.bids.aggregate(max_bid=models.Max('bid'))['max_bid']

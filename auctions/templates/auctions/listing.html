@@ -23,46 +23,84 @@
         {% endfor %}
     {% endif %}
     
-    <div class="row">
+    <div class="flex-layout">
         {% if listing.image %}
-            <!-- Two-column layout if there's an image -->
-            <div class="col-md-4">
-                <img src="{{ listing.image }}" alt="{{ listing.title }}" class="listing_img">
+            <div class="flex-image">
+                <img src="{{ listing.image }}" alt="{{ listing.title }}" class="listing_img img-fluid">
             </div>
-            <div class="col-md-8">
+            <div class="flex-info">
         {% else %}
             <!-- Full-width layout if no image -->
             <div class="col-12">
         {% endif %}
             <div class="details-box">
-                <!-- Price -->
-                <div class="price-box mb-3">
-                    <span class="listing-labels">Current bid:</span>
-                    <div class="listing-price">${{ listing.latest_price|floatformat:"-2" }}</div>
-                </div>
+                {% if not listing.closed %}
+                    <!-- Price -->
+                    <div class="price-box mb-3">
+                        <span class="listing-labels">Current bid:</span>
+                        <div class="listing-price">${{ listing.latest_price|floatformat:"-2" }}</div>
+                    </div>
 
-                <!-- Bidding Section -->
-                <div class="place-bid-box mb-5">
-                    <label>
-                        {{ listing.total_bids }} bid(s) so far.
-                        {% if is_latest_bid_by_user %}
-                            <span><strong>Your bid is the current bid!</strong></span>
+                    <!-- Bidding Section -->
+                    <div class="place-bid-box mb-5">
+                        <label>
+                            {{ listing.total_bids }} bid(s) so far.
+                            {% if is_latest_bid_by_user %}
+                                <span><strong>Your bid is the current bid!</strong></span>
+                            {% endif %}
+                        </label>
+
+                        <form method="POST" action="{% url 'listing' listing.id %}">
+                            {% csrf_token %}
+                            <div class="input-group mt-1" style="max-width: 250px;">
+                                <span class="input-group-text">$</span>
+                                {{ form.bid }}
+                            </div>
+                            {% if form.errors.bid %}
+                                <div class="text-danger small mt-1">{{ form.errors.bid.0 }}</div>
+                            {% endif %}
+                            <button type="submit" name="place_bid" class="btn btn-primary mt-2" style="width: 250px;">Place Bid</button>
+                        </form>
+                        
+                        {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'toggle_watchlist' listing.id %}">
+                                {% csrf_token %}
+                                {% if listing in user.watchlist.all %}
+                                    <button class="btn btn-outline-danger mt-2" type="submit" style="width: 250px;">Remove from Watchlist</button>
+                                {% else %}
+                                    <button class="btn btn-outline-primary mt-2" type="submit" style="width: 250px;">Add to Watchlist</button>
+                                {% endif %}
+                            </form>
                         {% endif %}
-                    </label>
 
-                    <form method="POST" action="{% url 'listing' listing.id %}">
-                        {% csrf_token %}
-                        <div class="input-group mt-1" style="max-width: 250px;">
-                            <span class="input-group-text">$</span>
-                            {{ form.bid }}
-                        </div>
-                        {% if form.errors.bid %}
-                            <div class="text-danger small mt-1">{{ form.errors.bid.0 }}</div>
+                        {% if is_users_listing %}
+                            <form method="POST" action="{% url 'close_auction' listing.id %}">
+                                {% csrf_token %}
+                                    <button class="btn btn-outline-danger mt-2" type="submit" style="width: 250px;">Close Auction</button>
+                            </form>
                         {% endif %}
-                        <button type="submit" class="btn btn-primary mt-2">Place Bid</button>
-                    </form>                        
 
-                </div>
+                    </div>
+                {% else %}
+                    <div class="closed-auction mb-5">
+                            Auction is closed.<br>
+                            {% if listing.winner %}
+                                Winner: 
+                                <strong>{{ listing.winner }}</strong><br>
+                                Final Price: 
+                                <span class="final-price">${{ listing.final_price|floatformat:"-2" }}</span>
+                            {% else %}
+                                This listing has ended with no bids.<br>
+                                The item was not sold.
+                            {% endif %} 
+                    </div>
+                {% endif %}
+                
+                <!-- Seller Info -->
+                 <div class="seller-box mb-3">
+                    <span class="listing-labels">Seller:</span>
+                    <div class="listing-texts">{{ listing.user }}</div>
+                 </div>
 
                 <!-- Description -->
                 <div class="desc-box mb-3">
@@ -72,16 +110,51 @@
                 
                 <!-- Category -->
                  {% if listing.category %}
-                    <div class="cat-box mb-5">
+                    <div class="cat-box mb-3">
                         <span class="listing-labels">Category:</span>
                         <div class="listing-texts">{{ listing.category }}</div>
                     </div>
                 {% endif %}
 
-                <!-- Created at -->
-                <div class="date-box mb=3">
-                    <span class="date-label">Created {{ listing.created_at }}</span>
+                <!-- Date added -->
+                <div class="date-box mb-3">
+                    <span class="listing-labels">Listed On:</span>
+                    <div class="listing-texts">{{ listing.created_at }}</div>
                 </div>
+
+                <!-- Date closed -->
+                {% if listing.closed %}
+                    <div class="date-closed mb-3">
+                        <span class="listing-labels">Closed On:</span>
+                        <div class="listing-texts">{{ listing.closed_at }}</div>
+                    </div>
+                {% endif %}
+
+                <!-- Comments -->
+                <hr>
+                <h5>Comments:</h5>
+                <div class="mb-4">
+                    {% for comment in comments %}
+                        <div class="mb-2 border rounded p-2">
+                            <strong>{{ comment.author.username }}</strong> <small class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
+                            <p>{{ comment.comment }}</p>
+                        </div>
+                    {% empty %}
+                        <p>No comments yet.</p>
+                    {% endfor %}
+                </div>
+                
+                {% if not listing.closed %}
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'listing' listing.id %}">
+                            {% csrf_token %}
+                            {{ comment_form.comment }}
+                            <button type="submit" name="add_comment" class="btn btn-outline-primary mt-2">Post Comment</button>
+                        </form>
+                    {% else %}
+                        <p><a href="{% url 'login' %}">Log in</a> to leave a comment.</p>
+                    {% endif %}
+                {% endif %}
             </div>                             
         </div>
     </div>

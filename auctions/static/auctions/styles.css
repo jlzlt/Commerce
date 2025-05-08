@@ -135,4 +135,32 @@ body {
     letter-spacing: 0.5px;
 }
 
+.closed-auction {
+    font-size: 1.5rem;
+}
 
+.final-price {
+    font-family: 'Roboto', -apple-system, sans-serif;
+    color: #2e8b57;
+    font-weight: 700;
+    font-size: 1.5rem;
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.5px;
+}
+
+.flex-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+.flex-image {
+    flex: 0 0 auto;
+    width: 500px; /* fixed width */
+}
+
+.flex-info {
+    flex: 1 1 0;
+    min-width: 300px; /* force wrapping earlier */
+}
