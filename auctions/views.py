@@ -2,11 +2,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.contrib import messages
 
-from .models import User, Listing
-from .forms import CreateListingForm
+from .models import User, Listing, Bids
+from .forms import CreateListingForm, PlaceBidForm
 
 
 def index(request):
@@ -97,8 +98,33 @@ def create(request):
         'form': form
     })
 
-def get_listing(request, id):
-    listing = Listing.objects.get(id=id)
+def listing(request, id):
+    listing = get_object_or_404(Listing, id=id)
+    current_bid = listing.latest_price()
+    is_latest_bid_by_user = listing.is_latest_bid_by_user(request.user) if request.user.is_authenticated else False
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.error(request, "You must be logged in to place a bid.")
+            return redirect('listing', id=listing.id)
+
+        form = PlaceBidForm(request.POST, current_bid=current_bid)
+        if form.is_valid():
+            bid_amount = form.cleaned_data['bid']
+
+            Bids.objects.create(
+                listing=listing,
+                bidder=request.user,
+                bid=bid_amount
+            )
+            messages.success(request, f"Your bid of ${bid_amount} was placed successfully.")
+            return redirect('listing', id=listing.id)
+        
+    else:
+        form = PlaceBidForm(current_bid=current_bid)
+
     return render(request, "auctions/listing.html", {
-        "listing": listing
+        "listing": listing,
+        "form": form,
+        'is_latest_bid_by_user': is_latest_bid_by_user
     })

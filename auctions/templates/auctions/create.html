@@ -5,45 +5,22 @@
 {% block body %}
     <div id="create_div">
         <h2>Create a New Listing</h2>
-        <form action="{% url 'create' %}" method="post">
+        <form action="{% url 'create' %}" method="post" class="needs-validation" novalidate>
             {% csrf_token %}
-
-            <label class="create_labels" for="{{ form.title.id_for_label }}" style="margin-top: 20px;">Listing title:</label><br>
-            {{ form.title }}
-            {% if form.title.errors %}
-                <span class="create_errors">{{ form.title.errors.0 }}</span>
-            {% endif %}
-            <br>
-
-            <label class="create_labels" for="{{ form.start_bid.id_for_label }}">Starting bid ($):</label><br>
-            {{ form.start_bid }}
-            {% if form.start_bid.errors %}
-                <span class="create_errors">{{ form.start_bid.errors.0 }}</span>
-            {% endif %}
-            <br>
-
-            <label class="create_labels" for="{{ form.pic_url.id_for_label }}">URL for picture (optional):</label><br>
-            {{ form.pic_url }}
-            {% if form.pic_url.errors %}
-                <span class="create_errors">{{ form.pic_url.errors.0 }}</span>
-            {% endif %}
-            <br>
-
-            <label class="create_labels" for="{{ form.category.id_for_label }}">Category (optional):</label><br>
-            {{ form.category }}
-            {% if form.category.errors %}
-                <span class="create_errors">{{ form.category.errors.0 }}</span>
-            {% endif %}
-            <br>
-
-            <label class="create_labels" for="{{ form.description.id_for_label }}">Description:</label><br>
-            {{ form.description }}
-            {% if form.description.errors %}
-                <span class="create_errors">{{ form.description.errors.0 }}</span>
-            {% endif %}
-            <br>
-
-            <button type="submit">Submit</button><br>
-        </form>
+        
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    <div class="d-flex align-items-center">
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="ms-3 text-danger small create_errors">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>        
     </div>
 {% endblock %}

@@ -20,10 +20,6 @@ body {
     margin-left: 5px;
 }
 
-.create_labels {
-    margin-top: 5px;
-}
-
 #list_container {
     display: flex;
     flex-wrap: wrap;
@@ -89,6 +85,12 @@ body {
     color: black;
 }
 
+.item_img {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+}
+
 .listing_img {
     max-width: 100%;
     max-height: 400px;
@@ -99,32 +101,38 @@ body {
     padding-bottom: 10px;
 }
 
-.item_img {
-    width: 300px;
-    height: 300px;
-    object-fit: contain;
-}
-
 #listing_div {
     border-width: 1px;
     border-style: solid;
     border-color:rgba(0,0,0,.1);
     border-radius: 20px;
-    padding: 10px;
+    padding: 1rem;
 }
 
-#listing_desc {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 1.0rem;
+.listing-texts {
+    font-size: 1.25rem;
 }
 
-#listing_price {
+.listing-labels {
+    font-weight: 350;
+    opacity: 0.75;
+    font-size: 1rem;
+}
+
+.date-label {
+    font-weight: 350;
+    opacity: 0.75;
+    font-size: 0.75rem;
+}
+
+.listing-price {
     font-family: 'Roboto', -apple-system, sans-serif;
     color: #2e8b57;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-feature-settings: "tnum";
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.5px;
 }
+
+

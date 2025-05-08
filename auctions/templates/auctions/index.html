@@ -7,7 +7,7 @@
         <h2 id="index_heading">Active Listings</h2>
         <div id="list_container">       
             {% for listing in listings %}
-                <a href="{% url 'get_listing' listing.id %}" class="listing_link">
+                <a href="{% url 'listing' listing.id %}" class="listing_link">
                     <div class="list_item">
                             {% if listing.image %}
                                 <img src="{{ listing.image }}" alt="{{ listing.title }}" class="item_img">

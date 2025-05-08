@@ -20,6 +20,16 @@ class Listing(models.Model):
     def latest_price(self):
         highest_bid = self.bids.aggregate(max_bid=models.Max('bid'))['max_bid']
         return highest_bid if highest_bid is not None else self.start_bid
+    
+    def total_bids(self):
+        return self.bids.count()
+    
+    def is_latest_bid_by_user(self, user):
+        # Get the latest bid and check if it's made by the current user
+        latest_bid = self.bids.order_by('-placed_at').first()
+        if latest_bid:
+            return latest_bid.bidder == user
+        return False
 
 
 class Bids(models.Model):

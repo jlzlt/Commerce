@@ -1,15 +1,90 @@
 {% extends "auctions/layout.html" %}
 
+{% block title %} {{ listing.title }} {% endblock %}
+
 {% block body %}
 
 <div id="listing_div">
     <h2 id="listing_heading">{{ listing.title }}</h2>
-    <hr></hr>
-    {% if listing.image %}
-    <img src="{{ listing.image }}" alt="{{ listing.title }}" class="listing_img">
+    <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {% else %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {% endif %}
+                <strong>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
     {% endif %}
-    <div id="listing_desc">{{ listing.description }}</div>
-    <div id="listing_price">${{ listing.latest_price|floatformat:"-2" }}</div>
+    
+    <div class="row">
+        {% if listing.image %}
+            <!-- Two-column layout if there's an image -->
+            <div class="col-md-4">
+                <img src="{{ listing.image }}" alt="{{ listing.title }}" class="listing_img">
+            </div>
+            <div class="col-md-8">
+        {% else %}
+            <!-- Full-width layout if no image -->
+            <div class="col-12">
+        {% endif %}
+            <div class="details-box">
+                <!-- Price -->
+                <div class="price-box mb-3">
+                    <span class="listing-labels">Current bid:</span>
+                    <div class="listing-price">${{ listing.latest_price|floatformat:"-2" }}</div>
+                </div>
+
+                <!-- Bidding Section -->
+                <div class="place-bid-box mb-5">
+                    <label>
+                        {{ listing.total_bids }} bid(s) so far.
+                        {% if is_latest_bid_by_user %}
+                            <span><strong>Your bid is the current bid!</strong></span>
+                        {% endif %}
+                    </label>
+
+                    <form method="POST" action="{% url 'listing' listing.id %}">
+                        {% csrf_token %}
+                        <div class="input-group mt-1" style="max-width: 250px;">
+                            <span class="input-group-text">$</span>
+                            {{ form.bid }}
+                        </div>
+                        {% if form.errors.bid %}
+                            <div class="text-danger small mt-1">{{ form.errors.bid.0 }}</div>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary mt-2">Place Bid</button>
+                    </form>                        
+
+                </div>
+
+                <!-- Description -->
+                <div class="desc-box mb-3">
+                    <span class="listing-labels">Description:</span>
+                    <div class="listing-texts">{{ listing.description }}</div>
+                </div>
+                
+                <!-- Category -->
+                 {% if listing.category %}
+                    <div class="cat-box mb-5">
+                        <span class="listing-labels">Category:</span>
+                        <div class="listing-texts">{{ listing.category }}</div>
+                    </div>
+                {% endif %}
+
+                <!-- Created at -->
+                <div class="date-box mb=3">
+                    <span class="date-label">Created {{ listing.created_at }}</span>
+                </div>
+            </div>                             
+        </div>
+    </div>
 </div>
 
 {% endblock %}

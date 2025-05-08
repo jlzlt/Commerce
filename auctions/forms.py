@@ -18,31 +18,56 @@ class CreateListingForm(forms.Form):
         label="Title", 
         required=True, 
         max_length=64,
-        widget=forms.TextInput(attrs={'class': 'create_fields'})
+        widget=forms.TextInput(attrs={'class': 'form-control create_fields'})
     )
     start_bid = forms.DecimalField(
-        label="Starting Bid", 
+        label="Starting Bid ($)", 
         required=True,
         min_value=0, 
         max_digits=10,
-        widget=forms.NumberInput(attrs={'class': 'create_fields'})
+        widget=forms.NumberInput(attrs={'class': 'form-control create_fields'})
     )
     pic_url = forms.URLField(
-        label="Picture URL", 
+        label="Picture URL (optional)", 
         required=False, 
         max_length=255,
         validators=[validate_image_url],
-        widget=forms.TextInput(attrs={'class': 'create_fields'})
+        widget=forms.TextInput(attrs={'class': 'form-control create_fields'})
     )
     category = forms.CharField(
-        label="Category", 
+        label="Category (optional)", 
         required=False, 
         max_length=64,
-        widget=forms.TextInput(attrs={'class': 'create_fields'})
+        widget=forms.TextInput(attrs={'class': 'form-control create_fields'})
     )
     description = forms.CharField(
         label="Description", 
-        widget=forms.Textarea(attrs={'id': 'create_desc'}), 
+        widget=forms.Textarea(attrs={'id': 'create_desc', 'class': 'form-control'}), 
         required=True, 
         max_length=1000
     )
+
+
+class PlaceBidForm(forms.Form):
+    bid = forms.DecimalField(
+        label='Place a bid',
+        max_digits=10,
+        decimal_places=2,
+        min_value=0.01,
+        required=True,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Bid',
+            'style': 'width: 200px;'
+        })
+    )
+
+    def __init__(self, *args, current_bid=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.current_bid = current_bid
+
+    def clean_bid(self):
+        bid = self.cleaned_data.get('bid')
+        if self.current_bid is not None and bid <= self.current_bid:
+            raise ValidationError(f'Your bid must be higher than the current price (${self.current_bid:.2f}).')
+        return bid
