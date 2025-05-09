@@ -10,7 +10,7 @@
     <div class="list-group mt-4">    
     {% for category in categories %}
 
-    <a href="{% url 'index' %}" class="list-group-item list-group-item-action">{{ category }}</a>
+    <a href="{% url 'category' category.id %}" class="list-group-item list-group-item-action"><strong>{{ category }}</strong></a>
 
     {% endfor %}
     </ul>

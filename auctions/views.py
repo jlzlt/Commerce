@@ -206,3 +206,12 @@ def categories(request):
     return render(request, 'auctions/categories.html', {
         "categories": categories
     })
+
+def category(request, id):
+    check_category = get_object_or_404(Categories, id=id)
+
+    return render(request, 'auctions/category.html', {
+        "listings": check_category.listings.all(),
+        "category": check_category,
+    })
+        
