@@ -53,7 +53,7 @@ class CreateListingForm(forms.Form):
 class PlaceBidForm(forms.Form):
     bid = forms.DecimalField(
         label='Place a bid',
-        max_digits=8,
+        max_digits=10,
         decimal_places=2,
         min_value=0.01,
         required=True,

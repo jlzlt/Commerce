@@ -8,23 +8,25 @@
         <h2 id="index_heading">Active Listings</h2>
         <div id="list_container">       
             {% for listing in listings %}
-                <a href="{% url 'listing' listing.id %}" class="listing_link">
-                    <div class="list_item">
-                            {% if listing.image %}
-                                <img src="{{ listing.image }}" alt="{{ listing.title }}" class="item_img">
-                            {% else %}
-                                <img src="{% static 'auctions/no_image.jpg' %}" alt="No image" class="item_img">
-                            {% endif %}
-                            <div class="item_info">
-                                <h5>{{ listing.title|truncatechars:60 }}</h5>
-                                <div class="item_price">
-                                    <span class="price_label">Current Bid:</span>
-                                    <span class="price_num">${{ listing.latest_price|floatformat:"-2" }}</span>
+                {% if not listing.closed %}
+                    <a href="{% url 'listing' listing.id %}" class="listing_link">
+                        <div class="list_item">
+                                {% if listing.image %}
+                                    <img src="{{ listing.image }}" alt="{{ listing.title }}" class="item_img">
+                                {% else %}
+                                    <img src="{% static 'auctions/no_image.jpg' %}" alt="No image" class="item_img">
+                                {% endif %}
+                                <div class="item_info">
+                                    <h5>{{ listing.title|truncatechars:60 }}</h5>
+                                    <div class="item_price">
+                                        <span class="price_label">Current Bid:</span>
+                                        <span class="price_num">${{ listing.latest_price|floatformat:"-2" }}</span>
+                                    </div>
+                                    <div class="item_desc">{{ listing.description|truncatechars:120 }}</div>
                                 </div>
-                                <div class="item_desc">{{ listing.description|truncatechars:120 }}</div>
-                            </div>
-                    </div>
-                </a>
+                        </div>
+                    </a>
+                {% endif %}
             {% endfor %}            
         </div> 
     </div>  
