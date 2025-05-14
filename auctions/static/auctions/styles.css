@@ -77,7 +77,7 @@ body {
 
 @media (max-width: 783px) {
     #index_heading {
-        justify-self: center;
+        text-align: center;
     }
     #list_container {
         justify-content: center;
@@ -242,8 +242,8 @@ body {
     .flex-info {
         flex: 1 1 auto;
     }
-    #listing_heading {
-        justify-self: center;
+    #listing_heading, #create-heading {
+        text-align: center;
     }
     .listing-inputs {
         width: 100%;

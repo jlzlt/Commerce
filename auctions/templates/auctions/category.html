@@ -17,12 +17,12 @@
                             <img src="{% static 'auctions/no_image.jpg' %}" alt="No image" class="item_img">
                         {% endif %}
                         <div class="item_info">
-                            <h5>{{ listing.title }}</h5>
+                            <h5>{{ listing.title|truncatechars:60 }}</h5>
                             <div class="item_price">
                                 <span class="price_label">Current Bid:</span>
                                 <span class="price_num">${{ listing.latest_price|floatformat:"-2" }}</span>
                             </div>
-                            <div class="item_desc">{{ listing.description }}</div>
+                            <div class="item_desc">{{ listing.description|truncatechars:120 }}</div>
                         </div>
                 </div>
             </a>
