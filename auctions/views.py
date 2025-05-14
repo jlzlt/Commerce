@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -206,7 +206,12 @@ def watchlist(request):
 def categories(request):
     categories = Categories.objects.exclude(
         Q(name__isnull=True) | Q(name__exact="")
+    ).annotate(
+        active_listing_count=Count('listings', filter=Q(listings__closed=False))
+    ).filter(
+        active_listing_count__gt=0
     ).order_by("name")
+
     return render(request, 'auctions/categories.html', {
         "categories": categories
     })
