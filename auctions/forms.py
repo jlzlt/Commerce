@@ -53,14 +53,13 @@ class CreateListingForm(forms.Form):
 class PlaceBidForm(forms.Form):
     bid = forms.DecimalField(
         label='Place a bid',
-        max_digits=10,
+        max_digits=8,
         decimal_places=2,
         min_value=0.01,
         required=True,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'placeholder': 'Bid',
-            'style': 'width: 200px;'
         })
     )
 
@@ -83,7 +82,7 @@ class CommentForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'placeholder': 'Write your comment here...'
+                'placeholder': 'Write your comment here...',
             })
         }
         labels = {

@@ -146,8 +146,9 @@ def listing(request, id):
                 comment.save()
                 messages.success(request, "Comment added.")
                 return redirect('listing', id=listing.id)
-        
-    form = PlaceBidForm(current_bid=current_bid)
+
+    else:    
+        form = PlaceBidForm(current_bid=current_bid)
 
     return render(request, "auctions/listing.html", {
         "listing": listing,
