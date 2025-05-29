@@ -13,7 +13,7 @@ from .forms import CreateListingForm, PlaceBidForm, CommentForm
 
 
 def index(request):
-    listings = Listing.objects.all()
+    listings = Listing.objects.all().order_by('-created_at')
     return render(request, "auctions/index.html", {
         "listings": listings
     })
@@ -197,7 +197,7 @@ def close_auction(request, id):
 
 @login_required
 def watchlist(request):
-    user_watchlist = request.user.watchlist.all()
+    user_watchlist = request.user.watchlist.all().order_by('-created_at')
 
     return render(request, 'auctions/watchlist.html', {
         'user_watchlist': user_watchlist,
@@ -220,7 +220,7 @@ def category(request, id):
     check_category = get_object_or_404(Categories, id=id)
 
     return render(request, 'auctions/category.html', {
-        "listings": check_category.listings.all(),
+        "listings": check_category.listings.all().order_by('-created_at'),
         "category": check_category,
     })
         
