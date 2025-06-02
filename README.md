@@ -47,7 +47,7 @@ Open a terminal and run:
 
 `python manage.py runserver`
 
-### 5.) Open in browser
+### 6.) Open in browser
 
 Go to `http://127.0.0.1:8000/`.
 
